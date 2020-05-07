@@ -233,4 +233,4 @@ int change(char ch)     //将单个字符型数字转化为整形
 	i = ch - 48;
 	return (i);
 }
-#endif
+
