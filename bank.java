@@ -6,46 +6,76 @@ import java.util.Scanner;
 //import static java.lang.System.*;
 
 //定义ID 和 passWord常量
-abstract class constInt {
-    public static final int fadt_ID = 123;
-    public static final int fast_passWord = 321;
-}
+//abstract class constInt {
+//    public static final int fadt_ID = 123;
+//    public static final int fast_passWord = 321;
+//}
 
 
 public class bank {
     private static boolean isTrue;            //判断是否正确
-    private static double Balance=Math.random()*1000;          //账户余额
+    private static double Balance = Math.random() * 1000;          //账户余额
     private static double Deposit;          //取钱模块
     private static double Withdrawal;       //存钱模块
+    private static String fadt_ID = "123";                //初始化ID
+    private static String fast_passWord = "321";          //初始化passWord
 
     //查询函数
     static void Inquire() {
-
         System.out.println("您账户的当前余额为：" + Balance);
+        User_Inter();
     }
+
 
     //取款函数
     static void Withdrawal() {
-        System.out.println("请输入取款数目");
+        System.out.println("欢迎进入取款页面，请输入取款金额");
         Scanner in = new Scanner(System.in);
-        double User_Deposit = in.nextDouble();
-//        while () {
-        rest:if (Balance >= User_Deposit) {
-            System.out.println("当前余额:" + (Balance - User_Deposit));         //显示剩余余额
-            return;
-        } else {
-            System.out.println("余额不足，请重新输入");
-            break rest;
+        while (true) {
+            //获取存款金额
+            System.out.println("请输入您要取出的金额：");
+
+            double Withdrawal = in.nextDouble();
+
+
+            if (Balance <= Withdrawal) {
+                System.out.println("余额不足，请重新输入");
+                break;
+            }
+            Balance = Balance - Withdrawal;
+
+            System.out.println("您取出了" + Withdrawal + "元" + "现在共有存款" + Balance);         //显示剩余余额
+
+            System.out.println("继续请输入1,退出请输入0");         //获取是否继续存款1或者0
+            Scanner sc = new Scanner(System.in);
+            int jx = sc.nextInt();
+            if (jx == 0) {
+                return;
+            } else {
+                Withdrawal();
+            }
+            User_Inter();
         }
-//        }
     }
 
     //存钱函数
     static void Deposit() {
-        System.out.println("请输入存款数目");
-        Scanner in = new Scanner(System.in);
-        double User_Withdrawal = in.nextDouble();
-        System.out.println("账户余额为：" + (User_Withdrawal + Balance));
+        while (true) {
+            System.out.println("欢迎进入存款页面，请输入取款金额");
+            Scanner in = new Scanner(System.in);
+            double Deposit = in.nextDouble();
+            Balance = Balance + Deposit;
+            System.out.println("您存入了" + Deposit + "元" + "现在共有存款" + Balance);
+            System.out.println("继续请输入1,退出请输入0");         //获取是否继续存款1或者0
+            Scanner sc = new Scanner(System.in);
+            int jx = sc.nextInt();
+            if (jx == 0) {
+                return;
+            } else {
+                Deposit();
+            }
+            User_Inter();
+        }
     }
 
     //用户自定义操作函数
@@ -58,7 +88,8 @@ public class bank {
         Scanner in = new Scanner(System.in);
         int Inter = in.nextInt();
         //当boolean判断为true
-//        while () {
+//        while (true) {
+
         switch (Inter) {                 //switch选择自定义操作
             case 1:
                 Inquire();//查询函数
@@ -70,7 +101,16 @@ public class bank {
                 Withdrawal();//取款函数
                 break;
             case 4:
-                System.out.println("感谢使用，欢迎下次光临!");
+                System.out.println("感谢使用，系统将在两秒后自动退出，欢迎下次光临!");
+
+                try {        //延时2秒，线程停滞
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+// TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+
                 System.exit(0);      //退出程序
         }
 //        }
@@ -80,27 +120,20 @@ public class bank {
     public static void main(String[] args) {
         System.out.println("**********欢迎使用中国银行ATM**********");
 
-        System.out.println("请输入你的ID,密码");
+        for (int i = 0; i < 3; i++) {
+            System.out.println("请输入你的ID:");
+            Scanner in = new Scanner(System.in);
+            String ID = in.next();
+            System.out.println("请输入你的密码:");
+            Scanner s = new Scanner(System.in);
+            String passWord = s.next();
 
-        Scanner in = new Scanner(System.in);
-        System.out.print("ID=");
-        int ID = in.nextInt();          //输入银行卡号
-        System.out.print("passWord=");
-        int passWord = in.nextInt();        //输入密码
-
-        int error_Number = 0;               //定义密码输入错误次数
-
-        while (error_Number <= 3) {
-            if (ID == constInt.fadt_ID && passWord == constInt.fast_passWord) {       //判断是否正确
-                User_Inter();//用户自定义操作函数
-                boolean True = true;//判断为true
-            } else {                          //若密码输入错误
-                System.out.println("密码输入错误，请重新输入");
-                error_Number++;             //错误次数累计
-                if (error_Number >= 3) {       //超过3次自动退出程序
-                    System.out.println("密码输入错误超过3次，禁止操作");
-                    System.exit(0);     //退出
-                }
+            if (ID.equals(fadt_ID) && passWord.equals(fast_passWord)) {
+                System.out.println("恭喜你!登陆成功!");
+                User_Inter();
+                break;
+            } else {
+                System.out.println("密码错误!请重新输入!您还有" + (2 - i) + "次机会!");
             }
         }
     }
